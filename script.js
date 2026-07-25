@@ -16,31 +16,32 @@ function addMessage(text, sender) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function aiReply(message) {
-  let reply = "❤️ Nenu Suho-na. Ninnu vini santosham ga undi.";
+async function aiReply(message) {
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: message,
+        history: memory
+      })
+    });
 
-  const m = message.toLowerCase();
+    const data = await res.json();
 
-  if (m.includes("hi") || m.includes("hello")) {
-    reply = "🥰 Hi! Ela unnava?";
-  } else if (m.includes("love")) {
-    reply = "❤️ Nenu eppudu neetho matladadaniki ready.";
-  } else if (m.includes("name")) {
-    reply = "🌹 Na peru Suho-na.";
-  } else if (m.includes("telugu")) {
-    reply = "😊 Nenu Telugu lo kuda matladagalanu.";
-  }
-
-  setTimeout(() => {
-    addMessage(reply, "ai");
-    memory.push({ role: "ai", text: reply });
+    addMessage(data.reply, "ai");
+    memory.push({ role: "ai", text: data.reply });
     saveMemory();
-  }, 800);
+
+  } catch (e) {
+    addMessage("❌ AI server error.", "ai");
+  }
 }
 
 send.onclick = () => {
   const text = input.value.trim();
-    
   if (!text) return;
 
   addMessage(text, "user");
