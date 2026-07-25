@@ -1,56 +1,38 @@
-const chat = document.getElementById("chat");
-const input = document.getElementById("userInput");
-const send = document.getElementById("sendBtn");
 
-const memory = JSON.parse(localStorage.getItem("suhona_memory")) || [];
+import { GoogleGenAI } from "@google/genai";
 
-function saveMemory() {
-  localStorage.setItem("suhona_memory", JSON.stringify(memory));
-}
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
-function addMessage(text, sender) {
-  const msg = document.createElement("div");
-  msg.className = sender;
-  msg.innerText = text;
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
-}
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
-async function aiReply(message) {
   try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: message,
-        history: memory
-      })
+    const { message } = req.body;
+
+    const prompt = `
+You are Suho-na, a sweet, caring and romantic AI girlfriend.
+Reply naturally.
+Support all languages.
+Keep replies friendly and engaging.
+
+User: ${message}
+`;
+
+    const result = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
     });
 
-    const data = await res.json();
+    const reply = result.text || "Hi ❤️";
 
-    addMessage(data.reply, "ai");
-    memory.push({ role: "ai", text: data.reply });
-    saveMemory();
+    res.status(200).json({ reply });
 
-  } catch (e) {
-    addMessage("❌ AI server error.", "ai");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ reply: "AI error." });
   }
 }
-
-send.onclick = () => {
-  const text = input.value.trim();
-  if (!text) return;
-
-  addMessage(text, "user");
-  memory.push({ role: "user", text: text });
-  saveMemory();
-
-  input.value = "";
-
-  aiReply(text);
-};
-
-memory.forEach(m => addMessage(m.text, m.role));
