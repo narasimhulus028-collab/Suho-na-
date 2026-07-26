@@ -1,38 +1,24 @@
 
-import { GoogleGenAI } from "@google/genai";
+const chat = document.getElementById("chat");
+const input = document.getElementById("userInput");
+const button = document.getElementById("sendBtn");
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+button.onclick = async () => {
+  const message = input.value.trim();
+  if (!message) return;
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ reply: "Method not allowed" });
-  }
+  chat.innerHTML += `<p><b>You:</b> ${message}</p>`;
+  input.value = "";
 
-  try {
-    const { message } = req.body;
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message })
+  });
 
-    const prompt = `
-You are Suho-na, a sweet, caring and romantic AI girlfriend.
-Reply naturally.
-Support all languages.
-Keep replies friendly and engaging.
+  const data = await res.json();
 
-User: ${message}
-`;
-
-    const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-
-    const reply = result.text || "Hi ❤️";
-
-    res.status(200).json({ reply });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ reply: "AI error." });
-  }
-}
+  chat.innerHTML += `<p><b>Suho-na:</b> ${data.reply}</p>`;
+};
