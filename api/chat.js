@@ -13,8 +13,11 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-4.1-mini",
-        messages: [
+  model: "openai/gpt-4.1-mini",
+  max_tokens: 300,
+  messages: [
+     
+  
           {
             role: "system",
             content:
