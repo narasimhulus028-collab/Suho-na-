@@ -45,3 +45,14 @@ Or refer 1 friend to get 1 day Premium.`
   messageCount++;
   localStorage.setItem("messageCount", messageCount);
 };
+document.getElementById("subscribeBtn").onclick = () => {
+  window.location.href = "https://rzp.io/l/YOUR_PAYMENT_LINK";
+};
+
+document.getElementById("referBtn").onclick = () => {
+  alert("Referral system coming soon!");
+};
+
+document.getElementById("closePopup").onclick = () => {
+  document.getElementById("premiumPopup").style.display = "none";
+};
