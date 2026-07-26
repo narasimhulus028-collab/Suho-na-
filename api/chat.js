@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ reply: "Method not allowed" });
   }
@@ -9,19 +9,16 @@ export default async function handler(req, res) {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-  model: "openai/gpt-4.1-mini",
-  max_tokens: 300,
-  messages: [
-     
-  
+        model: "openai/gpt-4.1-mini",
+        max_tokens: 300,
+        messages: [
           {
-             {
-  role: "system",
-  content: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
+            role: "system",
+            content: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
 
 Rules:
 - Always reply in the same language as the user's message.
@@ -30,12 +27,7 @@ Rules:
 - Talk like a real girlfriend.
 - Be caring, emotional, playful, and supportive.
 - Keep replies short and natural.`
-},
-{
-  role: "user",
-  content: message
-}
-              
+          },
           {
             role: "user",
             content: message
@@ -52,13 +44,13 @@ Rules:
       });
     }
 
-    const reply = data.choices?.[0]?.message?.content || "No reply";
-
-    res.status(200).json({ reply });
+    res.status(200).json({
+      reply: data.choices[0].message.content
+    });
 
   } catch (err) {
     res.status(500).json({
       reply: err.message
     });
   }
-}
+ }
