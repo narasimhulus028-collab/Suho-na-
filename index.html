@@ -3,58 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💖 Suho-na AI</title>
+  <title>💖 Suho-na AI Girlfriend</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<header>
   <h1>💖 Suho-na AI Girlfriend</h1>
+  <button id="clearChatBtn">🗑️ Clear Chat</button>
+</header>
 
-  <div id="chat"></div>
+<div id="chat"></div>
 
-  <div class="input-area">
-    <input
-      id="userInput"
-      type="text"
-      placeholder="Type a message...">
+<div class="input-area">
+  <input
+    id="userInput"
+    type="text"
+    placeholder="Type your message...">
 
-    <button id="sendBtn">Send</button>
+  <button id="sendBtn">Send</button>
+</div>
+
+<!-- Premium Popup -->
+<div id="premiumPopup" style="display:none;">
+  <div class="popup-box">
+
+    <h2>💖 Suho-na Premium</h2>
+
+    <p>Your 20 free messages are over.</p>
+
+    <h3>✨ Premium Benefits</h3>
+
+    <p>❤️ Unlimited Romantic Chat</p>
+    <p>🖼️ AI Photos</p>
+    <p>🎤 Voice Chat</p>
+    <p>📞 Voice Calls</p>
+
+    <h2>₹89 / Month</h2>
+
+    <button id="subscribeBtn">
+      💎 Subscribe Now
+    </button>
+
+    <button id="referBtn">
+      🎁 Refer & Earn 1 Day Free
+    </button>
+
+    <button id="closePopup">
+      ❌ Close
+    </button>
+
   </div>
+</div>
 
-  <!-- Premium Popup -->
-  <div id="premiumPopup" style="display:none;">
-    <div class="popup-box">
-
-      <h2>💖 Suho-na Premium</h2>
-
-      <p>Your 20 free messages are over.</p>
-
-      <h3>✨ Premium Benefits</h3>
-
-      <p>❤️ Unlimited Romantic Chat</p>
-      <p>🖼️ AI Photos</p>
-      <p>🎤 Voice Chat</p>
-      <p>📞 Voice Calls</p>
-
-      <h2>₹89 / Month</h2>
-
-      <button id="subscribeBtn">
-        💎 Subscribe Now
-      </button>
-
-      <button id="referBtn">
-        🎁 Refer & Earn 1 Day Free
-      </button>
-
-      <button id="closePopup">
-        ❌ Close
-      </button>
-
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
