@@ -81,4 +81,10 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
-closePopup.onclick = () =>
+closePopup.onclick = () => {
+  popup.style.display = "none";
+};
+
+subscribeBtn.onclick = () => {
+  alert("Premium Coming Soon!");
+};
