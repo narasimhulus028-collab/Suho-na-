@@ -1,56 +1,57 @@
-const chat = document.getElementById("chat");
-const input = document.getElementById("userInput");
-const button = document.getElementById("sendBtn");
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
 
-const popup = document.getElementById("premiumPopup");
-const closePopup = document.getElementById("closePopup");
-const subscribeBtn = document.getElementById("subscribeBtn");
-const referBtn = document.getElementById("referBtn");
+h1 {
+  text-align: center;
+  color: #ff4081;
+}
 
-let messageCount = parseInt(localStorage.getItem("messageCount")) || 0;
+#chat {
+  height: 60vh;
+  overflow-y: auto;
+  background: white;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
 
-button.onclick = async () => {
-  const message = input.value.trim();
-  if (!message) return;
+.input-area {
+  display: flex;
+  padding: 10px;
+}
 
-  if (messageCount >= 20) {
-    popup.style.display = "flex";
-    return;
-  }
+#userInput {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+}
 
-  chat.innerHTML += `<p><b>You:</b> ${message}</p>`;
-  input.value = "";
+#sendBtn {
+  padding: 10px 20px;
+  background: #ff4081;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-left: 10px;
+  cursor: pointer;
+}
 
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
+#premiumPopup {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+}
 
-    const data = await res.json();
-
-    chat.innerHTML += `<p><b>Suho-na:</b> ${data.reply}</p>`;
-    chat.scrollTop = chat.scrollHeight;
-
-    messageCount++;
-    localStorage.setItem("messageCount", messageCount);
-
-  } catch (err) {
-    chat.innerHTML += `<p><b>Suho-na:</b> Server Error</p>`;
-  }
-};
-
-closePopup.onclick = () => {
-  popup.style.display = "none";
-};
-
-subscribeBtn.onclick = () => {
-  alert("💎 Premium payment feature coming soon.");
-};
-
-referBtn.onclick = () => {
-  alert("🎁 Refer & Earn feature coming soon.");
-};
+.popup-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 320px;
+}
