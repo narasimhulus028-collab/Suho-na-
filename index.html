@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💖 Suho-na AI Girlfriend</title>
+  <title>💖 Suho-na AI</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,7 +12,6 @@
 
 <header>
   <h1>💖 Suho-na AI Girlfriend</h1>
-  <button id="clearChatBtn">🗑️ Clear Chat</button>
 </header>
 
 <div id="chat"></div>
@@ -20,44 +20,42 @@
   <input
     id="userInput"
     type="text"
-    placeholder="Type your message...">
+    placeholder="Message Suho-na...">
 
   <button id="sendBtn">Send</button>
 </div>
 
-<!-- Premium Popup -->
-<div id="premiumPopup" style="display:none;">
+<div id="premiumPopup" class="popup">
+
   <div class="popup-box">
 
-    <h2>💖 Suho-na Premium</h2>
+    <h2>💎 Suho-na Premium</h2>
 
-    <p>Your 20 free messages are over.</p>
+    <p>20 Free Messages Completed.</p>
 
-    <h3>✨ Premium Benefits</h3>
+    <ul>
+      <li>❤️ Unlimited Chat</li>
+      <li>🧠 Long-term Memory</li>
+      <li>🖼️ AI Images</li>
+      <li>🎤 Voice Chat</li>
+      <li>📞 Voice Calls</li>
+    </ul>
 
-    <p>❤️ Unlimited Romantic Chat</p>
-    <p>🖼️ AI Photos</p>
-    <p>🎤 Voice Chat</p>
-    <p>📞 Voice Calls</p>
-
-    <h2>₹89 / Month</h2>
+    <h3>₹89 / Month</h3>
 
     <button id="subscribeBtn">
-      💎 Subscribe Now
-    </button>
-
-    <button id="referBtn">
-      🎁 Refer & Earn 1 Day Free
+      Subscribe
     </button>
 
     <button id="closePopup">
-      ❌ Close
+      Close
     </button>
 
   </div>
+
 </div>
 
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 
 </body>
 </html>
