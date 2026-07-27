@@ -1,15 +1,13 @@
 const chat = document.getElementById("chat");
 const input = document.getElementById("userInput");
-const button = document.getElementById("sendBtn");
+const sendBtn = document.getElementById("sendBtn");
 
 const popup = document.getElementById("premiumPopup");
 const closePopup = document.getElementById("closePopup");
 const subscribeBtn = document.getElementById("subscribeBtn");
-const referBtn = document.getElementById("referBtn");
 
-let messageCount = parseInt(localStorage.getItem("messageCount")) || 0;
+let messageCount = Number(localStorage.getItem("messageCount")) || 0;
 
-// Load chat history
 chat.innerHTML = localStorage.getItem("chatHistory") || "";
 
 function saveChat() {
@@ -28,21 +26,19 @@ async function sendMessage() {
   }
 
   chat.innerHTML += `
-    <p><b>🧑 You:</b> ${message}</p>
+    <div class="message user">${message}</div>
+  `;
+
+  input.value = "";
+  saveChat();
+
+  chat.innerHTML += `
+    <div class="message bot" id="typing">💖 Suho-na is typing...</div>
   `;
 
   saveChat();
 
-  input.value = "";
-
-  chat.innerHTML += `
-    <p id="typing"><b>💖 Suho-na:</b> Typing...</p>
-  `;
-
-  chat.scrollTop = chat.scrollHeight;
-
   try {
-
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: {
@@ -56,46 +52,33 @@ async function sendMessage() {
     document.getElementById("typing").remove();
 
     chat.innerHTML += `
-      <p><b>💖 Suho-na:</b> ${data.reply}</p>
+      <div class="message bot">${data.reply}</div>
     `;
 
     messageCount++;
-
     localStorage.setItem("messageCount", messageCount);
 
     saveChat();
 
-  } catch (err) {
+  } catch (e) {
 
     const typing = document.getElementById("typing");
-
     if (typing) typing.remove();
 
     chat.innerHTML += `
-      <p><b>💖 Suho-na:</b> ⚠️ Server Error</p>
+      <div class="message bot">⚠️ Server Error</div>
     `;
 
     saveChat();
-
   }
 }
 
-button.onclick = sendMessage;
+sendBtn.onclick = sendMessage;
 
-input.addEventListener("keypress", function (e) {
+input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     sendMessage();
   }
 });
 
-closePopup.onclick = () => {
-  popup.style.display = "none";
-};
-
-subscribeBtn.onclick = () => {
-  window.location.href = "https://rzp.io/l/YOUR_PAYMENT_LINK";
-};
-
-referBtn.onclick = () => {
-  alert("🎁 Referral System Coming Soon");
-};
+closePopup.onclick = () =>
