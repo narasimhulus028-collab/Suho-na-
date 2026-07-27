@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ reply: "Method not allowed" });
   }
@@ -16,17 +16,11 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [
             {
-              role: "user",
               parts: [
                 {
                   text: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
 
-Rules:
-- Reply in the same language as the user's message.
-- If the user speaks Telugu, reply only in natural Telugu.
-- Be caring, romantic, playful and supportive.
-- Never say you are an AI unless directly asked.
-
+Reply in the same language as the user.
 User: ${message}`
                 }
               ]
@@ -38,15 +32,21 @@ User: ${message}`
 
     const data = await response.json();
 
+    if (!response.ok) {
+      return res.status(response.status).json({
+        reply: data.error?.message || "Gemini API Error"
+      });
+    }
+
     const reply =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Sorry, I couldn't reply.";
+      "No response from Gemini.";
 
-    res.status(200).json({ reply });
+    return res.status(200).json({ reply });
 
   } catch (err) {
-    res.status(500).json({
-      reply: "Server Error"
+    return res.status(500).json({
+      reply: err.message
     });
   }
-}
+ }
