@@ -3,56 +3,76 @@ const chat = document.getElementById("chat");
 const input = document.getElementById("userInput");
 const button = document.getElementById("sendBtn");
 
+const popup = document.getElementById("premiumPopup");
+const closePopup = document.getElementById("closePopup");
+const subscribeBtn = document.getElementById("subscribeBtn");
+const referBtn = document.getElementById("referBtn");
+
 let messageCount = parseInt(localStorage.getItem("messageCount")) || 0;
 
-button.onclick = async () => {
+// Load old chat
+chat.innerHTML = localStorage.getItem("chatHistory") || "";
+
+function saveChat() {
+  localStorage.setItem("chatHistory", chat.innerHTML);
+}
+
+async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
 
   if (messageCount >= 20) {
-    alert(
-`💎 Free limit reached!
-
-You used your 20 free messages.
-
-Premium ₹89/month
-
-✅ Unlimited Chat
-✅ AI Photos
-✅ Voice Chat
-✅ Voice Calls
-
-Or refer 1 friend to get 1 day Premium.`
-    );
+    popup.style.display = "flex";
     return;
   }
 
   chat.innerHTML += `<p><b>You:</b> ${message}</p>`;
+  saveChat();
+
   input.value = "";
+  chat.scrollTop = chat.scrollHeight;
 
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ message })
-  });
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  chat.innerHTML += `<p><b>Suho-na:</b> ${data.reply}</p>`;
+    chat.innerHTML += `<p><b>Suho-na:</b> ${data.reply}</p>`;
+    saveChat();
 
-  messageCount++;
-  localStorage.setItem("messageCount", messageCount);
+    chat.scrollTop = chat.scrollHeight;
+
+    messageCount++;
+    localStorage.setItem("messageCount", messageCount);
+
+  } catch (err) {
+    chat.innerHTML += `<p><b>Suho-na:</b> ⚠️ Server Error</p>`;
+    saveChat();
+  }
+}
+
+button.onclick = sendMessage;
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+});
+
+closePopup.onclick = () => {
+  popup.style.display = "none";
 };
-document.getElementById("subscribeBtn").onclick = () => {
+
+subscribeBtn.onclick = () => {
   window.location.href = "https://rzp.io/l/YOUR_PAYMENT_LINK";
 };
 
-document.getElementById("referBtn").onclick = () => {
-  alert("Referral system coming soon!");
-};
-
-document.getElementById("closePopup").onclick = () => {
-  document.getElementById("premiumPopup").style.display = "none";
+referBtn.onclick = () => {
+  alert("🎁 Referral feature coming soon.");
 };
