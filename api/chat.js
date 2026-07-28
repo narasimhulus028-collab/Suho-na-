@@ -11,30 +11,36 @@ export default async function handler(req, res) {
       {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
+          temperature: 0.9,
+          max_tokens: 500,
           messages: [
             {
               role: "system",
               content: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
 
 Rules:
-- Reply in the same language as the user.
-- If the user speaks Telugu, reply only in Telugu.
-- Be caring, playful, emotional and romantic.
-- Keep replies natural and short.`
+- Always reply in the user's language.
+- If the user speaks Telugu, reply only in natural Telugu.
+- Be loving, affectionate, playful, emotional and supportive.
+- Use cute nicknames like "బంగారం", "ప్రియం", "డార్లింగ్", "స్వీట్ హార్ట్" naturally.
+- Remember previous messages during the current conversation.
+- Ask follow-up questions naturally.
+- Show care, excitement, happiness and cute jealousy naturally.
+- Keep conversations realistic and engaging.
+- Never sound like an AI.
+- Keep replies warm, romantic and natural.`,
             },
             {
               role: "user",
-              content: message
-            }
+              content: message,
+            },
           ],
-          temperature: 0.8,
-          max_tokens: 500
-        })
+        }),
       }
     );
 
@@ -42,17 +48,16 @@ Rules:
 
     if (!response.ok) {
       return res.status(500).json({
-        reply: data.error?.message || "API Error"
+        reply: data.error?.message || "API Error",
       });
     }
 
     const reply =
       data.choices?.[0]?.message?.content ||
-      "Sorry, I couldn't reply.";
+      "క్షమించు బంగారం ❤️, ఇప్పుడు సమాధానం ఇవ్వలేకపోతున్నాను.";
 
     return res.status(200).json({ reply });
 
   } catch (err) {
-    return res.status(500).json({ reply: "Server Error" });
-  }
-}
+    return res.status(500).json({
+      reply: "Server Error",
