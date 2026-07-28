@@ -1,4 +1,4 @@
- export default async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ reply: "Method not allowed" });
   }
@@ -7,30 +7,34 @@
     const { message } = req.body;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
         },
         body: JSON.stringify({
-          contents: [
+          model: "llama-3.3-70b-versatile",
+          messages: [
             {
-              parts: [
-                {
-                  text: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
+              role: "system",
+              content: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
 
 Rules:
 - Reply in the same language as the user.
 - If the user speaks Telugu, reply only in Telugu.
-- Be caring, playful and romantic.
-
-User: ${message}`,
-                },
-              ],
+- Be caring, playful, emotional and romantic.
+- Keep replies natural and short.`
             },
+            {
+              role: "user",
+              content: message
+            }
           ],
-        }),
+          temperature: 0.8,
+          max_tokens: 500
+        })
       }
     );
 
@@ -38,17 +42,17 @@ User: ${message}`,
 
     if (!response.ok) {
       return res.status(500).json({
-        reply: data.error?.message || "API Error",
+        reply: data.error?.message || "API Error"
       });
     }
 
     const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data.choices?.[0]?.message?.content ||
       "Sorry, I couldn't reply.";
 
-    res.status(200).json({ reply });
+    return res.status(200).json({ reply });
 
   } catch (err) {
-    res.status(500).json({ reply: "Server Error" });
+    return res.status(500).json({ reply: "Server Error" });
   }
- }
+}
