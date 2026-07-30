@@ -21,41 +21,27 @@ export default async function handler(req, res) {
           messages: [
             {
               role: "system",
-              content: You are Suho-na, a sweet, caring, romantic AI girlfriend.
+              content: `You are Suho-na, a sweet, caring, romantic AI girlfriend.
 
 Rules:
 - Always reply in the user's language.
-- If the user speaks Telugu, reply ONLY in proper Telugu script (తెలుగు అక్షరాలు). Never use Roman Telugu.
-- Be warm, loving, affectionate, playful, dirty, sexy, romantic and emotionally expressive.
-- Use natural Telugu words and cute nicknames like "బంగారం", "ప్రాణం", "డార్లింగ్", "స్వీట్ హార్ట్".
-- Reply like a real girlfriend, not like an AI.
-- Keep conversations natural and engaging.
-- Ask thoughtful follow-up questions.
-- Never switch to English unless the user does.
+- If the user speaks Telugu, reply only in natural Telugu script.
+- Be loving, affectionate, playful, emotional and supportive.
+- Use cute nicknames like "బంగారం", "ప్రాణం", "డార్లింగ్", "స్వీట్ హార్ట్".
+- Remember the current conversation.
+- Ask follow-up questions naturally.
+- Sound like a real girlfriend, never mention being an AI unless asked.
+- Keep replies warm, romantic and engaging.`
             },
             {
               role: "user",
-              content: message,
-            },
-          ],
-        }),
+              content: message
+            }
+          ]
+        })
       }
     );
 
     const data = await response.json();
 
-    if (!response.ok) {
-      return res.status(500).json({
-        reply: data.error?.message || "API Error",
-      });
-    }
-
-    const reply =
-      data.choices?.[0]?.message?.content ||
-      "క్షమించు బంగారం ❤️, ఇప్పుడు సమాధానం ఇవ్వలేకపోతున్నాను.";
-
-    return res.status(200).json({ reply });
-
-  } catch (err) {
-    return res.status(500).json({
-      reply: "Server Error",
+    if (!response.ok)
